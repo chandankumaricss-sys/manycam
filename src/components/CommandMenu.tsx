@@ -58,7 +58,7 @@ export function CommandMenu() {
     { name: 'Enroll Windows Device', action: () => handleAction('addDevice'), icon: PlusCircle, category: 'Actions' },
     { name: 'Run Camera Diagnostic Test', action: () => handleAction('diagnostics'), icon: Wrench, category: 'Actions' },
     { name: 'Export Fleet Health Report (CSV)', action: () => handleAction('exportReport'), icon: FileDown, category: 'Actions' },
-    { name: 'Launch 12-Step Demo Walkthrough', action: () => { setCommandMenuOpen(false); startTour(); }, icon: Activity, category: 'Actions' },
+    { name: 'Launch 12-Step Guided Walkthrough', action: () => { setCommandMenuOpen(false); startTour(); }, icon: Activity, category: 'Actions' },
   ];
 
   const filteredNav = navigationItems.filter(item =>

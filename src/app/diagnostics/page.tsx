@@ -560,7 +560,7 @@ export default function DiagnosticsAnalyticsPage() {
                   className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#0796E5] hover:bg-[#0878BF] text-white text-xs font-semibold shadow-xs"
                 >
                   <Sparkles size={14} />
-                  <span>Trigger Demo Build</span>
+                  <span>Trigger Pipeline Build</span>
                 </button>
               </div>
             </div>

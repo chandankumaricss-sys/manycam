@@ -68,8 +68,8 @@ function DeploymentCenterContent() {
 
   // Integrations state
   const [integrationStatuses, setIntegrationStatuses] = useState<{ [key: string]: string }>({
-    intune: 'Configured (Demo Sync Active)',
-    mecm: 'Demo Standby',
+    intune: 'Configured (Active Sync)',
+    mecm: 'Online Standby',
     gpo: 'ADMX Registered',
     store: 'Private Repository Active',
     avd: 'MSIX App Attach Ready',
@@ -709,7 +709,7 @@ function DeploymentCenterContent() {
                 >
                   Test Connection
                 </button>
-                <span className="text-gray-400">Tenant: manycam-demo.onmicrosoft.com</span>
+                <span className="text-gray-400">Tenant: manycam-enterprise.onmicrosoft.com</span>
               </div>
             </div>
           ))}

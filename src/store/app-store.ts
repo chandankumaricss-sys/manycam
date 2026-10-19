@@ -133,7 +133,7 @@ export interface AppState {
   activeQuickAction: 'deploy' | 'release' | 'addDevice' | 'cameraConfig' | 'diagnostics' | 'exportReport' | null;
   setActiveQuickAction: (action: 'deploy' | 'release' | 'addDevice' | 'cameraConfig' | 'diagnostics' | 'exportReport' | null) => void;
 
-  // Demo tour
+  // Guided tour
   isTourActive: boolean;
   currentTourIndex: number;
   startTour: () => void;

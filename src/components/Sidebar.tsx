@@ -157,13 +157,13 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom Demo Tour & Help Box */}
+      {/* Bottom Guided Tour & Help Box */}
       <div className="p-3 border-t border-[#E7ECF2] bg-white space-y-2">
         {!isCollapsed ? (
           <div className="rounded-lg p-2.5 bg-gradient-to-br from-[#EFF8FF] to-blue-50/50 border border-blue-100">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-[#0878BF]">
               <Sparkles size={14} className="text-[#0796E5]" />
-              Interactive Demo Tour
+              Interactive Guided Tour
             </div>
             <p className="text-[11px] text-[#667085] mt-1 leading-snug">
               12 guided scenarios exploring virtual camera fleet deployment & updates.
@@ -179,7 +179,7 @@ export function Sidebar() {
           <button
             onClick={startTour}
             className="w-full flex items-center justify-center p-2 rounded-lg bg-blue-50 text-[#0796E5] hover:bg-blue-100"
-            title="Launch Demo Tour"
+            title="Launch Guided Tour"
           >
             <Sparkles size={18} />
           </button>

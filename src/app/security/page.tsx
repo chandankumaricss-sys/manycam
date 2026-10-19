@@ -320,7 +320,7 @@ export default function SecurityCompliancePage() {
                       onClick={() => showToast(`Verified signature record for "${cert.alias}"`)}
                       className="text-[#0796E5] font-semibold hover:underline"
                     >
-                      Verify Demo Signature
+                      Verify Driver Signature
                     </button>
                   </div>
                 </div>

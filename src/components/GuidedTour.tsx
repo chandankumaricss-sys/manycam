@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Sparkles, ChevronLeft, ChevronRight, X, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { useAppStore, TOUR_SCENARIOS } from '@/store/app-store';
 
-export function DemoTour() {
+export function GuidedTour() {
   const router = useRouter();
   const pathname = usePathname();
   const {
@@ -40,7 +40,7 @@ export function DemoTour() {
           </div>
           <div>
             <div className="text-xs font-semibold tracking-wide uppercase opacity-90">
-              Demo Walkthrough
+              Guided Walkthrough
             </div>
             <div className="text-sm font-bold leading-tight">
               Scenario {currentScenario.id} of {TOUR_SCENARIOS.length}

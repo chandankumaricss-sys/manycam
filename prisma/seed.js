@@ -627,8 +627,8 @@ async function main() {
   console.log('--- Seeding Camera Sources, Presets & Policies ---');
   const cameraSources = [
     { sourceType: 'webcam', displayName: 'Physical Webcam (Local Device)', configurationJson: JSON.stringify({ facingMode: 'user', autoFocus: true }) },
-    { sourceType: 'demo_video', displayName: 'Enterprise Conference Stream (Sample)', configurationJson: JSON.stringify({ loop: true, sampleUrl: '/media/demo-conference.mp4' }) },
-    { sourceType: 'demo_screen', displayName: 'Application Screen Share (Figma/IDE)', configurationJson: JSON.stringify({ fps: 30, resolution: '1920x1080' }) },
+    { sourceType: 'sample_video', displayName: 'Enterprise Conference Stream (Sample)', configurationJson: JSON.stringify({ loop: true, sampleUrl: '/media/conference-stream.mp4' }) },
+    { sourceType: 'screen_share', displayName: 'Application Screen Share (Figma/IDE)', configurationJson: JSON.stringify({ fps: 30, resolution: '1920x1080' }) },
     { sourceType: 'presentation', displayName: 'Executive Boardroom Slide Deck', configurationJson: JSON.stringify({ slides: 12, autoAdvanceSec: 20 }) },
     { sourceType: 'test_pattern', displayName: 'SMPTE Color Bars (EBU Standard)', configurationJson: JSON.stringify({ standard: 'SMPTE EG 1' }) },
     { sourceType: 'color_bars', displayName: 'Digital HD Alignment Grid & Crosshairs', configurationJson: JSON.stringify({ grid: true, crosshair: true }) },
@@ -660,7 +660,7 @@ async function main() {
       })
     },
     {
-      name: 'Product Demo & Screen PiP (1440p30)',
+      name: 'Product Showcase & Screen PiP (1440p30)',
       configurationJson: JSON.stringify({
         resolution: '2560x1440',
         fps: 30,

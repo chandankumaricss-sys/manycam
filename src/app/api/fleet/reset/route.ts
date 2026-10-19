@@ -8,10 +8,10 @@ export async function POST() {
     exec(`node "${seedPath}"`, (error, stdout, stderr) => {
       if (error) {
         console.error('Error executing seed script:', error, stderr);
-        resolve(NextResponse.json({ error: 'Failed to reset demo database' }, { status: 500 }));
+        resolve(NextResponse.json({ error: 'Failed to reset database' }, { status: 500 }));
       } else {
         console.log('Seed executed cleanly:', stdout);
-        resolve(NextResponse.json({ success: true, message: 'Database reset to initial deterministic seed' }));
+        resolve(NextResponse.json({ success: true, message: 'Database reset to initial deterministic state' }));
       }
     });
   });

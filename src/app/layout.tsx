@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
-import { DemoTour } from '@/components/DemoTour';
+import { GuidedTour } from '@/components/GuidedTour';
 import { CommandMenu } from '@/components/CommandMenu';
 import { NotificationDrawer } from '@/components/NotificationDrawer';
 import { HelpModal } from '@/components/HelpModal';
-import { ResetDemoDialog } from '@/components/ResetDemoDialog';
+import { ResetFleetDialog } from '@/components/ResetFleetDialog';
 
 export const metadata: Metadata = {
   title: 'ManyCam Enterprise Control Center | Windows Virtual Camera Fleet Administration',
@@ -35,11 +35,11 @@ export default function RootLayout({
         </div>
 
         {/* Global Overlays & Modals */}
-        <DemoTour />
+        <GuidedTour />
         <CommandMenu />
         <NotificationDrawer />
         <HelpModal />
-        <ResetDemoDialog />
+        <ResetFleetDialog />
       </body>
     </html>
   );

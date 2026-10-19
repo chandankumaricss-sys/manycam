@@ -241,7 +241,7 @@ export default function VirtualCameraPage() {
         ctx.ellipse(w / 2, h / 2 + 120, 140, 90, 0, 0, Math.PI * 2);
         ctx.fill();
       } else {
-        // Demo Screen / Corporate Presentation Scene
+        // Presentation / Corporate Broadcast Scene
         ctx.fillStyle = '#1E293B';
         ctx.fillRect(0, 0, w, h);
 
@@ -543,7 +543,7 @@ export default function VirtualCameraPage() {
                 <div className="mt-3 space-y-1.5">
                   {[
                     { name: 'Executive Meeting', desc: '1080p60 FHD • Subdued Bokeh' },
-                    { name: 'Product Demo', desc: '1440p30 QHD • Screen Overlay' },
+                    { name: 'Product Showcase', desc: '1440p30 QHD • Screen Overlay' },
                     { name: 'Training Presentation', desc: '720p30 • Bandwidth Optimized' },
                     { name: 'Webinar Broadcast', desc: '4K Ultra-Def • Green Screen Studio' },
                   ].map((scene) => (

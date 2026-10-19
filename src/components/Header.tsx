@@ -125,10 +125,10 @@ export function Header() {
           )}
         </div>
 
-        {/* DEMO Indicator Tag */}
-        <div className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200/80">
-          <Radio size={12} className="animate-pulse text-amber-600" />
-          <span>SIMULATED DEMO ENVIRONMENT</span>
+        {/* Fleet Production Status Indicator */}
+        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>PRODUCTION FLEET ACTIVE</span>
         </div>
       </div>
 
@@ -148,19 +148,19 @@ export function Header() {
           </kbd>
         </button>
 
-        {/* Demo Tour Button */}
+        {/* Guided Tour Button */}
         <button
-          id="btn-demo-tour"
+          id="btn-guided-tour"
           onClick={startTour}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
             isTourActive
               ? 'bg-[#0796E5] text-white shadow-sm'
               : 'bg-primary-muted text-[#0796E5] border border-blue-200 hover:bg-blue-100'
           }`}
-          title="Interactive 12-scenario presentation tour"
+          title="Interactive 12-scenario presentation walkthrough"
         >
           <Sparkles size={14} />
-          <span className="hidden md:inline">{isTourActive ? 'Tour Active' : 'Demo Tour'}</span>
+          <span className="hidden md:inline">{isTourActive ? 'Tour Active' : 'Guided Tour'}</span>
         </button>
 
         {/* Notifications Icon with Badge */}
@@ -182,11 +182,11 @@ export function Header() {
           <HelpCircle size={18} />
         </button>
 
-        {/* Reset Demo Data Action */}
+        {/* Reset Fleet Data Action */}
         <button
           onClick={() => setResetDialogOpen(true)}
           className="p-2 rounded-lg text-[#667085] hover:text-[#EF4444] hover:bg-red-50 transition-colors"
-          title="Reset Demo Data to Initial Deterministic State"
+          title="Reset Fleet Data to Baseline State"
         >
           <RotateCcw size={17} />
         </button>

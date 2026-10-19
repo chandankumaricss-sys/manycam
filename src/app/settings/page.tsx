@@ -19,7 +19,7 @@ import { useAppStore } from '@/store/app-store';
 
 export default function SettingsPage() {
   const { setResetDialogOpen } = useAppStore();
-  const [activeTab, setActiveTab] = useState<'general' | 'fleet' | 'updates' | 'security' | 'notifications' | 'integrations' | 'demo'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'fleet' | 'updates' | 'security' | 'notifications' | 'integrations' | 'maintenance'>('general');
 
   // Form State
   const [workspaceName, setWorkspaceName] = useState('ManyCam Enterprise Global Operations');
@@ -96,7 +96,7 @@ export default function SettingsPage() {
             Enterprise Console Settings
           </h1>
           <p className="text-xs text-[#667085] mt-1">
-            Global administrative configuration, telemetry thresholds, policy baselines, and demo management.
+            Global administrative configuration, telemetry thresholds, policy baselines, and database maintenance.
           </p>
         </div>
 
@@ -110,7 +110,7 @@ export default function SettingsPage() {
               { id: 'security', label: 'Security' },
               { id: 'notifications', label: 'Notifications' },
               { id: 'integrations', label: 'Integrations' },
-              { id: 'demo', label: 'Demo Controls' },
+              { id: 'maintenance', label: 'Maintenance & Tools' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -313,19 +313,19 @@ export default function SettingsPage() {
           </div>
         )}
 
-        {/* TAB 7: DEMO CONTROLS */}
-        {activeTab === 'demo' && (
+        {/* TAB 7: MAINTENANCE & TOOLS */}
+        {activeTab === 'maintenance' && (
           <div className="p-6 rounded-2xl border border-[#E7ECF2] bg-white shadow-card space-y-5 text-xs">
             <div>
-              <h3 className="font-bold text-sm text-[#182230]">Deterministic Demo Operations</h3>
+              <h3 className="font-bold text-sm text-[#182230]">System Maintenance & Fleet Operations</h3>
               <p className="text-xs text-[#667085] mt-0.5">
-                Manage simulation scenarios, generate sample incidents, or restore the factory seed dataset.
+                Manage operational routines, inject test diagnostics, or restore the baseline enterprise dataset.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-xl border border-red-200 bg-red-50/40 space-y-2">
-                <div className="font-bold text-red-700 text-sm">Reset Database to Initial Seed</div>
+                <div className="font-bold text-red-700 text-sm">Reset Database to Initial Baseline</div>
                 <p className="text-[#667085] text-[11px]">
                   Restores 2,486 managed devices (2,312 online, 98.4% success, 94.7% compliance, 18 alerts).
                 </p>
@@ -334,14 +334,14 @@ export default function SettingsPage() {
                   onClick={() => setResetDialogOpen(true)}
                   className="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold text-xs shadow-xs"
                 >
-                  Reset Demo Data
+                  Reset Fleet Database
                 </button>
               </div>
 
               <div className="p-4 rounded-xl border border-blue-200 bg-blue-50/40 space-y-2">
-                <div className="font-bold text-[#0796E5] text-sm">Generate Sample Incidents</div>
+                <div className="font-bold text-[#0796E5] text-sm">Generate Test Incidents</div>
                 <p className="text-[#667085] text-[11px]">
-                  Injects 3 virtual camera registration errors (Code 1603) on pilot devices to demonstrate repair workflows.
+                  Injects 3 virtual camera registration errors (Code 1603) on pilot devices to test automated repair workflows.
                 </p>
                 <button
                   type="button"

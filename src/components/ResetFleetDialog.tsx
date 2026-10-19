@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { RotateCcw, AlertTriangle, CheckCircle2, X } from 'lucide-react';
 import { useAppStore } from '@/store/app-store';
 
-export function ResetDemoDialog() {
+export function ResetFleetDialog() {
   const { isResetDialogOpen, setResetDialogOpen } = useAppStore();
   const [isResetting, setIsResetting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -14,14 +14,14 @@ export function ResetDemoDialog() {
   const handleReset = async () => {
     setIsResetting(true);
     try {
-      const res = await fetch('/api/demo/reset', { method: 'POST' });
+      const res = await fetch('/api/fleet/reset', { method: 'POST' });
       if (res.ok) {
         setSuccess(true);
         setTimeout(() => {
           window.location.reload();
         }, 1200);
       } else {
-        alert('Failed to reset demo data.');
+        alert('Failed to reset fleet data.');
         setIsResetting(false);
       }
     } catch {
@@ -40,17 +40,17 @@ export function ResetDemoDialog() {
           </div>
 
           <h3 className="text-base font-bold text-[#182230]">
-            Reset Demo Database to Initial State?
+            Reset Database to Baseline State?
           </h3>
 
           <p className="mt-2 text-xs text-[#667085] leading-relaxed">
-            This will wipe any simulated mutations, newly added devices, or created deployment jobs, and restore the exact <strong>2,486-device deterministic enterprise dataset</strong> (2,312 online, 98.4% deployment success, 94.7% compliance).
+            This will wipe any temporary mutations, newly added devices, or created deployment jobs, and restore the exact <strong>2,486-device deterministic enterprise dataset</strong> (2,312 online, 98.4% deployment success, 94.7% compliance).
           </p>
 
           <div className="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-800 flex items-start gap-2">
             <AlertTriangle size={15} className="flex-shrink-0 mt-0.5 text-amber-600" />
             <span>
-              All demo logs, saved custom presets, and active job simulations will be reverted to factory seed values.
+              All diagnostic event logs, saved custom presets, and active job queues will be reverted to factory baseline values.
             </span>
           </div>
 
@@ -82,7 +82,7 @@ export function ResetDemoDialog() {
                 <span>Restoring Initial Seed...</span>
               </>
             ) : (
-              <span>Confirm & Reset Demo Data</span>
+              <span>Confirm & Reset Fleet Data</span>
             )}
           </button>
         </div>

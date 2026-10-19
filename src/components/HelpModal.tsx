@@ -54,7 +54,7 @@ export function HelpModal() {
             { id: 'packaging', label: 'MSI vs. MSIX Packaging', icon: FileCode },
             { id: 'codes', label: 'Windows Exit Codes (1603, 1618)', icon: Terminal },
             { id: 'admx', label: 'ADMX / Group Policy Reference', icon: ShieldCheck },
-            { id: 'about', label: 'About & Demo Notice', icon: Info },
+            { id: 'about', label: 'Platform & System Overview', icon: Info },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -196,16 +196,16 @@ export function HelpModal() {
 
           {activeTab === 'about' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200">
-                <div className="flex items-center gap-2 font-bold text-amber-800 text-sm mb-1">
-                  <AlertCircle size={16} />
-                  <span>Important Demonstration Disclosure</span>
+              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
+                <div className="flex items-center gap-2 font-bold text-[#0878BF] text-sm mb-1">
+                  <Info size={16} />
+                  <span>Platform Overview & Fleet Architecture</span>
                 </div>
-                <p className="text-xs text-amber-900 leading-relaxed">
-                  This web application is an independently developed enterprise administration concept and interactive demonstration designed around the ManyCam visual branding. It demonstrates full-scale Windows Virtual Camera fleet operations, packaging workflows, staged rollouts, and security controls.
+                <p className="text-xs text-[#182230] leading-relaxed">
+                  The ManyCam Enterprise Control Center is an enterprise SaaS administration platform for Windows Virtual Camera fleet operations, packaging workflows, staged rollouts, and security controls across hybrid workstation fleets.
                 </p>
-                <p className="text-xs text-amber-900 mt-2 leading-relaxed">
-                  All enterprise organizations, telemetry feeds, and devices depicted are realistic fictional simulations. Simulated enterprise integrations (e.g., Intune, MECM) operate locally and do not alter real production infrastructure.
+                <p className="text-xs text-[#667085] mt-2 leading-relaxed">
+                  All enterprise organizations, telemetry feeds, and endpoint devices are centrally managed through automated Windows Intune, MECM, and Group Policy configuration rings.
                 </p>
               </div>
 

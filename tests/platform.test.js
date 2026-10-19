@@ -106,7 +106,7 @@ async function runTests() {
     const listRes = await fetch(`${BASE_URL}/api/camera/presets`);
     assert.strictEqual(listRes.status, 200);
     const presets = await listRes.json();
-    assert(presets.length >= 4, 'Must have seeded presets (Executive, Demo, Webinar)');
+    assert(presets.length >= 4, 'Must have seeded presets (Executive, Showcase, Webinar)');
 
     const saveRes = await fetch(`${BASE_URL}/api/camera/presets`, {
       method: 'POST',

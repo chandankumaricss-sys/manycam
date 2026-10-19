@@ -130,7 +130,7 @@ model DeviceGroupMember {
 
 model CameraSource {
   id                String  @id @default(cuid())
-  sourceType        String  // webcam, demo_video, screen, static_image, presentation, test_pattern, color_bars, green_screen
+  sourceType        String  // webcam, sample_video, screen, static_image, presentation, test_pattern, color_bars, green_screen
   displayName       String
   configurationJson String  @default("{}")
   enabled           Boolean @default(true)
