@@ -1,0 +1,394 @@
+// Prisma Schema for ManyCam Enterprise Control Center
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  industry    String
+  region      String
+  status      String   @default("Active")
+  createdAt   DateTime @default(now())
+  
+  users       User[]
+  devices     Device[]
+  groups      DeviceGroup[]
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  
+  users       User[]
+  permissions RolePermission[]
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  resource    String
+  action      String
+  
+  roles       RolePermission[]
+
+  @@unique([resource, action])
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  permissionId String
+  
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model User {
+  id             String       @id @default(cuid())
+  organizationId String
+  fullName       String
+  email          String       @unique
+  roleId         String
+  status         String       @default("Active")
+  createdAt      DateTime     @default(now())
+  
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  role           Role         @relation(fields: [roleId], references: [id])
+  devices        Device[]
+  deployments    Deployment[]
+  auditLogs      AuditLog[]
+  notifications  Notification[]
+}
+
+model Device {
+  id                String   @id @default(cuid())
+  organizationId    String
+  hostname          String   @unique
+  assignedUserId    String?
+  osName            String   // e.g. Windows 11 Enterprise
+  osBuild           String   // e.g. 24H2 (26100.2894)
+  architecture      String   // x64, ARM64
+  appVersion        String   // v3.8.2
+  agentVersion      String   // v2.4.1
+  cameraStatus      String   // Healthy, Warning, Error, Offline
+  serviceStatus     String   // Running, Stopped, Degraded
+  managementSource  String   // Microsoft Intune, SCCM, Standalone, Group Policy
+  updateChannel     String   // Stable, Beta, Canary, Pinned Legacy
+  complianceStatus  String   // Compliant, Non-compliant, Pending
+  lastSeenAt        DateTime @default(now())
+  enrolledAt        DateTime @default(now())
+  healthStatus      String   // Healthy, Warning, Critical, Offline
+
+  // Camera specific details
+  cameraDriver      String   @default("ManyCam Virtual WebCam v3.8")
+  selectedSource    String   @default("HD Pro Webcam C920")
+  resolution        String   @default("1920x1080")
+  fps               Int      @default(30)
+  videoFormat       String   @default("NV12")
+  micRouting        String   @default("Virtual Audio Device")
+
+  organization      Organization @relation(fields: [organizationId], references: [id])
+  assignedUser      User?        @relation(fields: [assignedUserId], references: [id])
+  
+  groups            DeviceGroupMember[]
+  deploymentDevices DeploymentDevice[]
+  updateHistory     DeviceUpdateHistory[]
+  securityChecks    SecurityAssessment[]
+  diagnosticEvents  DiagnosticEvent[]
+}
+
+model DeviceGroup {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  description    String
+  createdAt      DateTime @default(now())
+  
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  members        DeviceGroupMember[]
+}
+
+model DeviceGroupMember {
+  id        String      @id @default(cuid())
+  deviceId  String
+  groupId   String
+  
+  device    Device      @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  group     DeviceGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([deviceId, groupId])
+}
+
+model CameraSource {
+  id                String  @id @default(cuid())
+  sourceType        String  // webcam, demo_video, screen, static_image, presentation, test_pattern, color_bars, green_screen
+  displayName       String
+  configurationJson String  @default("{}")
+  enabled           Boolean @default(true)
+}
+
+model CameraPreset {
+  id                String   @id @default(cuid())
+  name              String
+  configurationJson String
+  createdBy         String   @default("System Admin")
+  createdAt         DateTime @default(now())
+}
+
+model CameraPolicy {
+  id           String   @id @default(cuid())
+  name         String
+  version      String   @default("1.0.0")
+  priority     Int      @default(100)
+  settingsJson String   // approved sources, max resolution, max FPS, formats, blur, etc.
+  status       String   @default("Active")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  assignments  CameraPolicyAssignment[]
+}
+
+model CameraPolicyAssignment {
+  id         String       @id @default(cuid())
+  policyId   String
+  targetType String       // All, Group, Organization, Device
+  targetId   String?      // ID of target entity
+  
+  policy     CameraPolicy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+}
+
+model Package {
+  id            String   @id @default(cuid())
+  name          String
+  version       String
+  architecture  String   // x64, ARM64
+  packageType   String   // MSI, MSIX, WiX-MSI, Burn Bootstrapper
+  fileSize      String   // e.g. 142.4 MB
+  sha256        String
+  signingStatus String   // Valid / Signed, Expired, Untrusted, Self-Signed
+  downloadUrl   String?
+  installContext String  @default("per-machine")
+  createdAt     DateTime @default(now())
+
+  deployments   Deployment[]
+  releases      Release[]
+}
+
+model Deployment {
+  id               String   @id @default(cuid())
+  packageId        String
+  targetType       String   // All, Group, Device, Pilot
+  targetId         String?
+  targetName       String   @default("Target Group")
+  deploymentMethod String   // Microsoft Intune, MECM/SCCM, Group Policy, Microsoft Store, winget, Manual MSI
+  installContext   String   // per-machine, per-user, silent
+  status           String   // Pending, Running, Paused, Completed, Failed, Cancelled
+  progress         Int      @default(0)
+  totalDevices     Int      @default(0)
+  successfulCount  Int      @default(0)
+  failedCount      Int      @default(0)
+  pendingCount     Int      @default(0)
+  startedAt        DateTime @default(now())
+  completedAt      DateTime?
+  initiatedBy      String   @default("Olivia Chen")
+  logsJson         String   @default("[]")
+
+  package          Package  @relation(fields: [packageId], references: [id])
+  user             User?    @relation(fields: [initiatedBy], references: [id])
+  deploymentDevices DeploymentDevice[]
+}
+
+model DeploymentDevice {
+  id           String     @id @default(cuid())
+  deploymentId String
+  deviceId     String
+  status       String     // Pending, In-Progress, Success, Failed, Retrying
+  exitCode     Int?       // e.g. 0, 1603, 1618, 3010
+  errorReason  String?
+  attempts     Int        @default(1)
+  lastAttemptAt DateTime  @default(now())
+  logExcerpt   String?
+
+  deployment   Deployment @relation(fields: [deploymentId], references: [id], onDelete: Cascade)
+  device       Device     @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+model Release {
+  id             String    @id @default(cuid())
+  packageId      String
+  version        String
+  channel        String    // Stable, Beta, Canary, Pinned Legacy
+  releaseNotes   String
+  status         String    // Published, Draft, Archived, Rollout-Active, Paused
+  minWindowsBuild String   @default("Windows 10 21H2 (19044)")
+  publishedAt    DateTime  @default(now())
+
+  package        Package   @relation(fields: [packageId], references: [id])
+  rollouts       Rollout[]
+}
+
+model Rollout {
+  id               String         @id @default(cuid())
+  releaseId        String
+  status           String         // Active, Paused, Completed, Rolled Back, Cancelled
+  currentStage     Int            @default(1)
+  targetPercent    Int            @default(1)
+  safetyGatesJson  String         // e.g. {"maxFailureRate": 2.0, "maxCrashRate": 0.5, "cameraErrorGate": true}
+  startedAt        DateTime       @default(now())
+  pausedReason     String?
+  
+  release          Release        @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  stages           RolloutStage[]
+}
+
+model RolloutStage {
+  id            String    @id @default(cuid())
+  rolloutId     String
+  stageNumber   Int
+  stageName     String    // Internal QA, Pilot Group, Early Adopters, Broad Rollout, GA
+  targetPercent Int
+  status        String    // Pending, Active, Completed, Paused, Skipped
+  startedAt     DateTime?
+  completedAt   DateTime?
+  successCount  Int       @default(0)
+  failureCount  Int       @default(0)
+
+  rollout       Rollout   @relation(fields: [rolloutId], references: [id], onDelete: Cascade)
+}
+
+model UpdatePolicy {
+  id                       String   @id @default(cuid())
+  name                     String
+  channel                  String   // Stable, Beta, Canary, Pinned Legacy
+  pinnedVersion            String?
+  deferDays                Int      @default(0)
+  maintenanceWindowJson    String   // e.g. {"days": ["Tue", "Thu"], "start": "02:00", "end": "05:00", "tz": "America/New_York"}
+  retryLimit               Int      @default(3)
+  automaticUpdatesEnabled Boolean  @default(true)
+  rebootHandling           String   @default("Notify User With 4h Grace Period")
+  meteredNetworkAllowed    Boolean  @default(false)
+  createdAt                DateTime @default(now())
+}
+
+model DeviceUpdateHistory {
+  id             String    @id @default(cuid())
+  deviceId       String
+  fromVersion    String
+  toVersion      String
+  status         String    // Success, Failed, Rolled Back, In-Progress
+  rollbackStatus String?   // None, Requested, Completed, Failed
+  startedAt      DateTime  @default(now())
+  completedAt    DateTime?
+  exitCode       Int       @default(0)
+  logSummary     String?
+
+  device         Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+model Certificate {
+  id                   String   @id @default(cuid())
+  alias                String
+  publisher            String
+  issuer               String
+  thumbprint           String   @unique
+  algorithm            String   @default("SHA256withRSA (4096-bit)")
+  timestampUrl         String   @default("http://timestamp.digicert.com")
+  expiresAt            DateTime
+  status               String   // Active, Expiring Soon, Expired, Revoked
+  packageValidation    String   @default("Verified Authentic")
+  pipelineIntegration  String   @default("Azure Key Vault HSM")
+  createdAt            DateTime @default(now())
+}
+
+model SecurityAssessment {
+  id          String   @id @default(cuid())
+  deviceId    String
+  checkType   String   // UAC, AppLocker, WDAC, Defender, CodeSigning, CFA, TamperProtection
+  result      String   // Pass, Warning, Failed, Not Assessed
+  detailsJson String
+  assessedAt  DateTime @default(now())
+
+  device      Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+model DiagnosticEvent {
+  id            String   @id @default(cuid())
+  deviceId      String?
+  severity      String   // Info, Warning, Error, Critical
+  component     String   // Windows Installer, Update Agent, Virtual Camera, Background Service, Policy Engine, Code Signing
+  eventCode     Int      // 1001, 1603, 7034, etc.
+  message       String
+  correlationId String
+  createdAt     DateTime @default(now())
+
+  device        Device?  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+model PipelineRun {
+  id           String          @id @default(cuid())
+  pipelineName String
+  provider     String          // GitHub Actions, Azure DevOps
+  buildNumber  String
+  branch       String          @default("main")
+  commitSha    String          @default("a84b12f")
+  status       String          // Success, Running, Failed, Cancelled, Awaiting Approval
+  startedAt    DateTime        @default(now())
+  completedAt  DateTime?
+
+  stages       PipelineStage[]
+}
+
+model PipelineStage {
+  id            String      @id @default(cuid())
+  pipelineRunId String
+  stageOrder    Int
+  stageName     String
+  status        String      // Success, Running, Failed, Pending, Skipped
+  durationSec   Int         @default(0)
+  logText       String?
+
+  pipelineRun   PipelineRun @relation(fields: [pipelineRunId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  actorId       String?
+  actorName     String   @default("Olivia Chen (Admin)")
+  action        String
+  resourceType  String
+  resourceId    String?
+  beforeJson    String?
+  afterJson     String?
+  outcome       String   @default("Success") // Success, Failed, Denied
+  correlationId String
+  createdAt     DateTime @default(now())
+
+  user          User?    @relation(fields: [actorId], references: [id])
+}
+
+model Notification {
+  id          String    @id @default(cuid())
+  recipientId String?
+  type        String    // update, deployment, alert, security, system
+  title       String
+  message     String
+  link        String?
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  user        User?     @relation(fields: [recipientId], references: [id])
+}
+
+model AppSetting {
+  key         String   @id
+  valueJson   String
+  updatedAt   DateTime @updatedAt
+}
